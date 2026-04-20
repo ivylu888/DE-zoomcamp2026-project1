@@ -1,0 +1,38 @@
+.DS_Store
+.vscode/
+__pycache__/
+*.py[cod]
+.env
+.terraform/
+*.tfstate
+*.tfstate.backup
+mage_data/
+*.db
+*.log
+*.json
+powerlifting_dbt/target/
+powerlifting_dbt/dbt_packages/
+powerlifting_dbt/logs/
+
+# Virtual environments
+venv/
+.venv/
+
+# Data files
+*.parquet
+
+# Archives
+*.zip
+
+# dbt artifacts
+dbt_packages/
+target/
+logs/
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.idea/
+.vscode/

@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: powerlifting_data
+    database: zoomcamp-powerlifting
+    schema: powerlifting_data
+    tables:
+      - name: raw_powerlifting
