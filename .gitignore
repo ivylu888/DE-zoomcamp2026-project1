@@ -1,38 +1,49 @@
+# --- OS & IDE ---
 .DS_Store
 .vscode/
+.idea/
+*.swp
+
+# --- Python & Virtual Environments ---
 __pycache__/
 *.py[cod]
-.env
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+*.env
+dev.env
+
+# --- Terraform ---
 .terraform/
 *.tfstate
 *.tfstate.backup
+.terraform.lock.hcl
+terraform-provider-google*
+*.zip
+
+# --- Data Engineering Specific (Mage & Data) ---
 mage_data/
 *.db
 *.log
-*.json
-powerlifting_dbt/target/
-powerlifting_dbt/dbt_packages/
-powerlifting_dbt/logs/
-
-# Virtual environments
-venv/
-.venv/
-
-# Data files
 *.parquet
+*.crc
+_SUCCESS
+instance_metadata.json
+# 只有在根目錄的 json 才會被忽略，避免誤傷 dbt 的 yml
+*.json
 
-# Archives
-*.zip
+# --- dbt (Powerlifting Project) ---
+# 這裡用萬用字元，確保所有 dbt 專案的暫存檔都被擋掉
+**/target/
+**/dbt_packages/
+**/logs/
+**/dbt_modules/
 
-# dbt artifacts
-dbt_packages/
-target/
-logs/
-
-# Python
-__pycache__/
-*.pyc
-
-# IDE
-.idea/
-.vscode/
+# --- Security (Critical!) ---
+.gcp-adc.json
+*key*.json
+*secret*.json
+credentials.json

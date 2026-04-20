@@ -1,0 +1,4 @@
+gcsfs
+pandas-gbq
+google-cloud-bigquery
+db-dtypes
