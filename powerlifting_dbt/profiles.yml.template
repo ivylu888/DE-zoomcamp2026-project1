@@ -1,0 +1,29 @@
+# dbt Profile Template for powerlifting_dbt
+#
+# How to use:
+#   1. Copy this template to profiles.yml:
+#      cp profiles.yml.template profiles.yml
+#
+#   2. Ensure the following environment variables are set in your .env file
+#      (or exported in your shell session):
+#      - GCP_PROJECT_ID       (your GCP project ID)
+#      - GCP_KEYFILE_PATH     (path to your service account JSON key file)
+#
+#   3. Run dbt from the powerlifting_dbt/ directory:
+#      dbt debug   # to verify the connection
+#      dbt run     # to execute the models
+
+powerlifting_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: "{{ env_var('GCP_PROJECT_ID') }}"
+      keyfile: "{{ env_var('GCP_KEYFILE_PATH') }}"
+      dataset: powerlifting_data
+      location: US
+      threads: 4
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1

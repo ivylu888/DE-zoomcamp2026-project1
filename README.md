@@ -116,6 +116,9 @@ cp dev.env.template .env
 # Edit .env and fill in:
 # GCP_PROJECT_ID=your-project-id
 # GCP_GCS_BUCKET_NAME=your-bucket-name
+# GCP_KEYFILE_PATH=path/to/your-service-account-key.json
+
+cp powerlifting_dbt/profiles.yml.template powerlifting_dbt/profiles.yml
 ```
 
 ### Step 5 — Mage Pipeline
