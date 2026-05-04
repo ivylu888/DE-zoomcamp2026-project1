@@ -149,3 +149,17 @@ Cleans and casts the raw table: converts numeric columns from string to FLOAT64,
 
 ### `fct_powerlifting` (table)
 Aggregates lifter counts and average/max lift weights by year, sex, weight class, country, and equipment. 64k rows covering competitions from 2000 onwards.
+
+## 🛠️ Maintenance & Tips
+
+### Schema changes (partitioning / clustering)
+
+If you modify the `config()` block in any model — especially partitioning or clustering settings — a regular `dbt run` will fail because BigQuery cannot alter these physical table properties in place.
+
+Run the following command to rebuild the table from scratch:
+
+```bash
+dbt run --select fct_powerlifting --full-refresh
+```
+
+The `--full-refresh` flag tells dbt to issue a `CREATE OR REPLACE TABLE` statement, dropping the existing table and recreating it with the new partition and cluster configuration. Without it, dbt will attempt an `ALTER TABLE` which BigQuery does not support for structural changes like these.
