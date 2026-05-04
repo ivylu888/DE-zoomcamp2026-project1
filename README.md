@@ -112,7 +112,7 @@ Creates:
 
 ### Step 4 — Environment Setup
 ```bash
-cp dev.env .env
+cp dev.env.template .env
 # Edit .env and fill in:
 # GCP_PROJECT_ID=your-project-id
 # GCP_GCS_BUCKET_NAME=your-bucket-name
