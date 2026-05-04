@@ -112,25 +112,23 @@ Creates:
 
 ### Step 4 — Environment Setup
 ```bash
-cp dev.env .env
+cp dev.env.template .env
 # Edit .env and fill in:
-# GCP_PROJECT_ID=your-project-id
-# GCP_GCS_BUCKET_NAME=your-bucket-name
+# GCP_PROJECT_ID, GCP_GCS_BUCKET_NAME, GCP_KEYFILE_PATH
+
+cp powerlifting_dbt/profiles.yml.template powerlifting_dbt/profiles.yml
 ```
 
-### Step 5 — Mage Pipeline
+### Step 5 — Run the Pipeline
+
+Mage automatically loads the `powerlifting_ingestion` pipeline from the pre-configured metadata in `magic-zoomcamp/pipelines/`. No manual setup is required.
+
+Start the services:
 ```bash
 docker-compose up -d
 ```
-Go to `http://localhost:6789`, create a new **Standard (batch)** pipeline called `powerlifting_ingestion` and add the three blocks from `pipelines/` in order:
-1. `download_powerlifting_data.py` → Data Loader
-2. `export_to_gcs.py` → Data Exporter
-3. `load_to_bigquery.py` → Data Exporter
 
-Run the pipeline. This will:
-1. Download OpenPowerlifting data (~200MB)
-2. Upload to GCS as Parquet
-3. Load into BigQuery
+Access the Mage UI at [http://localhost:6789](http://localhost:6789) to run the pipeline.
 
 ### Step 6 — dbt Transformation
 ```bash
