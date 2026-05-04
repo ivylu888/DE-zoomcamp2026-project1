@@ -1,4 +1,16 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    partition_by={
+        'field': 'meet_year',
+        'data_type': 'int64',
+        'range': {
+            'start': 1900,
+            'end': 2030,
+            'interval': 1
+        }
+    },
+    cluster_by=['Equipment', 'MeetCountry']
+) }}
 
 SELECT
     meet_year,
