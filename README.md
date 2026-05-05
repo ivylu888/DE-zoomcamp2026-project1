@@ -65,15 +65,17 @@ OpenPowerlifting (weekly CSV)
 ## Project Structure
 ```
 .
-├── main.tf                     # IaC: GCS bucket + BigQuery dataset
-├── docker-compose.yml          # Mage AI orchestration
+├── dev.env.template                        # Environment variable template
+├── main.tf                                 # IaC: GCS bucket + BigQuery dataset
+├── docker-compose.yml                      # Mage AI orchestration
 ├── Dockerfile
 ├── requirements.txt
-├── pipelines/                  # Mage pipeline block code
+├── pipelines/                              # Mage pipeline block code
 │   ├── download_powerlifting_data.py
 │   ├── export_to_gcs.py
 │   └── load_to_bigquery.py
-└── powerlifting_dbt/           # dbt transformation models
+└── powerlifting_dbt/                       # dbt transformation models
+    ├── profiles.yml.template               # dbt profile template
     └── models/
         ├── sources.yml
         ├── stg_powerlifting.sql
@@ -98,7 +100,7 @@ cd DE-zoomcamp2026-project1
 ### Step 2 — GCP Auth
 ```bash
 gcloud auth application-default login
-gcloud config set project YOUR_GCP_PROJECT_ID
+gcloud config set project your-gcp-project-id
 ```
 
 ### Step 3 — Infrastructure
@@ -121,14 +123,14 @@ cp powerlifting_dbt/profiles.yml.template powerlifting_dbt/profiles.yml
 
 ### Step 5 — Run the Pipeline
 
-Mage automatically loads the `powerlifting_ingestion` pipeline from the pre-configured metadata in `magic-zoomcamp/pipelines/`. No manual setup is required.
+Mage automatically loads the `powerlifting_ingestion` pipeline from the pre-configured metadata in the `pipelines/` directory. No manual setup is required.
 
 Start the services:
 ```bash
 docker-compose up -d
 ```
 
-Access the Mage UI at [http://localhost:6789](http://localhost:6789) to run the pipeline.
+Wait about 10–20 seconds for Mage to fully initialize, then open [http://localhost:6789](http://localhost:6789) to run the pipeline.
 
 ### Step 6 — dbt Transformation
 ```bash
@@ -148,7 +150,7 @@ Open the [Looker Studio Dashboard](https://datastudio.google.com/reporting/866cd
 Cleans and casts the raw table: converts numeric columns from string to FLOAT64, parses dates, filters out records with null totals or dates, and extracts meet year.
 
 ### `fct_powerlifting` (table)
-Aggregates lifter counts and average/max lift weights by year, sex, weight class, country, and equipment. 64k rows covering competitions from 2000 onwards.
+Aggregates lifter counts and average/max lift weights by year, sex, weight class, country, and equipment. 64k rows covering competitions from 2000 onwards. Partitioned by `meet_year` and clustered by `Equipment`, `MeetCountry` for query performance.
 
 ## 🛠️ Maintenance & Tips
 
@@ -163,3 +165,14 @@ dbt run --select fct_powerlifting --full-refresh
 ```
 
 The `--full-refresh` flag tells dbt to issue a `CREATE OR REPLACE TABLE` statement, dropping the existing table and recreating it with the new partition and cluster configuration. Without it, dbt will attempt an `ALTER TABLE` which BigQuery does not support for structural changes like these.
+
+## 🔍 Troubleshooting
+
+### `.env` copy failure
+If `cp dev.env.template .env` fails or the variables don't take effect, check file permissions and make sure all `your-*` placeholders have been replaced with real GCP values.
+
+### `profiles.yml` setup
+If dbt can't find connection info or throws an error, confirm you've copied `profiles.yml.template` to `powerlifting_dbt/profiles.yml` and that the variable names match those in your `.env` file exactly.
+
+### Loading the existing pipeline
+Mage automatically reads pipeline metadata from the `pipelines/` directory — no manual creation needed. If the pipeline doesn't appear in the UI, restart the Docker container with `docker-compose restart`.
